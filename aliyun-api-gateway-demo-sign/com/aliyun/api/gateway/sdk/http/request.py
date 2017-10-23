@@ -5,7 +5,8 @@ class Request:
     content_length = "Content-Length"
     content_type = "Content-Type"
 
-    def __init__(self, host=None, protocol=constant.HTTP, headers={}, url=None, method=None, time_out=None):
+    def __init__(self, host=None, protocol=constant.HTTP, headers={}, url=None, method=None, time_out=None,
+                 verify=True):
         self.__host = host
         self.__url = url
         self.__method = method
@@ -15,6 +16,10 @@ class Request:
         self.__content_type = None
         self.__query_str = None
         self.__protocol = protocol
+        self.__verify = verify
+
+    def get_verify(self):
+        return self.__verify
 
     def get_protocol(self):
         return self.__protocol

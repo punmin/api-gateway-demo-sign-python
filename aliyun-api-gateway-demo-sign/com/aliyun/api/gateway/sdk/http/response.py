@@ -2,12 +2,13 @@ from com.aliyun.api.gateway.sdk.http.request import Request
 
 import httplib
 import urllib
+import ssl
 from com.aliyun.api.gateway.sdk.common import constant
 
 
 class Response(Request):
     def __init__(self, host=None, url=None, method=constant.GET, headers={}, protocol=constant.HTTP, content_type=None, content=None, port=None,
-                 key_file=None, cert_file=None, time_out=None):
+                 key_file=None, cert_file=None, time_out=None, verify=True):
         Request.__init__(self, host=host, protocol=protocol, url=url, headers=headers, method=method, time_out=time_out)
         self.__ssl_enable = False
         if protocol == constant.HTTPS:
@@ -16,6 +17,7 @@ class Response(Request):
         self.__cert_file = cert_file
         self.__port = port
         self.__connection = None
+        self.__verify = verify
         self.set_body(content)
         self.set_content_type(content_type)
 
@@ -80,6 +82,7 @@ class Response(Request):
 
     def get_https_response(self):
         try:
+            ssl._https_verify_certificates(enable=self.__verify)
             self.__port = 443
             self.__connection = httplib.HTTPSConnection(self.parse_host(), self.__port,
                                                         cert_file=self.__cert_file,
